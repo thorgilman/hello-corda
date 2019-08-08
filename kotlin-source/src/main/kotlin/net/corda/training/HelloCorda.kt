@@ -9,36 +9,29 @@ import net.corda.core.transactions.TransactionBuilder
 import co.paralleluniverse.fibers.Suspendable as Suspendable
 
 
-/*
-Run network initially
-- just puts a note "hello corda" into the initiator's vault
-- query to show its there
-
-- then make the message customizable
-
-- then make it sharable
-*/
-
-
 /* Flow */
 @InitiatingFlow
 @StartableByRPC
-class SendMessageFlow(val target: Party) : FlowLogic<SignedTransaction>() { // TODO: Add param 'val messageContent: String'
+// TODO: Change this line
+//class SendMessageFlow(val target: Party) : FlowLogic<SignedTransaction>() {
+ class SendMessageFlow(private val target: Party, private val content: String) : FlowLogic<SignedTransaction>() {
 
     @Suspendable
     override fun call(): SignedTransaction {
         // Get initiating party & notary
-        val me = serviceHub.myInfo.legalIdentities.first()
+        val origin = serviceHub.myInfo.legalIdentities.first()
         val notary = serviceHub.networkMapCache.notaryIdentities.single()
 
         // Create transaction items
-        val command = Command(MessageContract.SendMessage(), listOf(me.owningKey))
-        val noteState = MessageState(me, target) // TODO: Change to 'MessageState(me, content=messageContent)'
+        val command = Command(MessageContract.SendMessage(), listOf(origin.owningKey))
+        // TODO: Change this line
+        //val noteState = MessageState(me, target)
+        val noteState = MessageState(origin, target, content = content)
         val stateAndContract = StateAndContract(noteState, MessageContract.ID)
 
         // Create & sign transaction
-        val utx = TransactionBuilder(notary = notary).withItems(stateAndContract, command)
-        val stx = serviceHub.signInitialTransaction(utx)
+        val builder = TransactionBuilder(notary = notary).withItems(stateAndContract, command)
+        val stx = serviceHub.signInitialTransaction(builder)
         stx.verify(serviceHub)
 
         // Send transaction to other party and finalize
@@ -70,8 +63,9 @@ class MessageContract: Contract {
         "There should be one output state." using (tx.outputStates.size == 1)
         "The output state must be a MessageState." using (tx.outputStates.single() is MessageState)
 
-        // TODO: Add a constraint that does "something"!
-        // no default message allowed?
+        // TODO: Add a constraint that doesn't allow a message to be sent with the default content
+         val outputState = tx.outputStates.single() as MessageState
+         "The default message should be updated!" using (outputState.content != "Hello Corda!")
     }
 }
 

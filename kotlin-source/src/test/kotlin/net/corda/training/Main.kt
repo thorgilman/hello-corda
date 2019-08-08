@@ -30,9 +30,9 @@ fun main(args: Array<String>) {
             notarySpecs = listOf(NotarySpec(CordaX500Name("Notary", "London","GB"), true)),
             waitForAllNodesToFinish = true)) {
         val(nodeA, nodeB, nodeC) = listOf(
-                startNode(NodeParameters(providedName = CordaX500Name("ParticipantA","London","GB")), rpcUsers = listOf(user)).getOrThrow(),
-                startNode(NodeParameters(providedName = CordaX500Name("ParticipantB","New York","US")), rpcUsers = listOf(user)).getOrThrow(),
-                startNode(NodeParameters(providedName = CordaX500Name("ParticipantC","Paris","FR")), rpcUsers = listOf(user)).getOrThrow())
+                startNode(NodeParameters(providedName = CordaX500Name("PartyA","London","GB")), rpcUsers = listOf(user)).getOrThrow(),
+                startNode(NodeParameters(providedName = CordaX500Name("PartyB","New York","US")), rpcUsers = listOf(user)).getOrThrow(),
+                startNode(NodeParameters(providedName = CordaX500Name("PartyC","Paris","FR")), rpcUsers = listOf(user)).getOrThrow())
 
 //        startWebserver(nodeA)
 //        startWebserver(nodeB)

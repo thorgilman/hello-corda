@@ -13,14 +13,11 @@ import net.corda.core.crypto.SecureHash;
 import net.corda.core.flows.*;
 import net.corda.core.transactions.TransactionBuilder;
 
-
-import net.corda.training.contract.IOUContract;
-import net.corda.training.state.IOUState;
-
 import java.util.stream.Collectors;
 import java.util.concurrent.Future;
 import java.util.*;
 
+import net.corda.training.HelloCorda;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 
@@ -34,7 +31,7 @@ import java.security.PublicKey;
  * Practical exercise instructions Flows part 1.
  * Uncomment the unit tests and use the hints + unit test body to complete the FLows such that the unit tests pass.
  */
-public class IOUIssueFlowTests {
+public class SendMessageFlowTests {
     private MockNetwork mockNetwork;
     private StartedMockNode a, b;
 
@@ -57,7 +54,7 @@ public class IOUIssueFlowTests {
         startedNodes.add(b);
 
         // For real nodes this happens automatically, but we have to manually register the flow for tests
-        startedNodes.forEach(el -> el.registerInitiatedFlow(IOUIssueFlow.ResponderFlow.class));
+        startedNodes.forEach(el -> el.registerInitiatedFlow(HelloCorda.SendMessageFlowResponder.class));
         mockNetwork.runNetwork();
     }
 
@@ -86,38 +83,38 @@ public class IOUIssueFlowTests {
      * - Sign the transaction and convert it to a {@link SignedTransaction} using the [getServiceHub().signInitialTransaction] method.
      * - Return the {@link SignedTransaction}.
      */
-    @Test
-    public void flowReturnsCorrectlyFormedPartiallySignedTransaction() throws Exception {
-        Party lender = a.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
-        Party borrower = b.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
-
-        IOUState iou = new IOUState(Currencies.POUNDS(10), lender, borrower);
-        IOUIssueFlow.InitiatorFlow flow = new IOUIssueFlow.InitiatorFlow(iou);
-
-        Future<SignedTransaction> future = a.startFlow(flow);
-        mockNetwork.runNetwork();
-
-        // Return the unsigned(!) SignedTransaction object from the IOUIssueFlow.
-        SignedTransaction ptx = future.get();
-
-        // Print the transaction for debugging purposes.
-        System.out.println(ptx.getTx());
-
-        // Check the transaction is well formed...
-        // No outputs, one input IOUState and a command with the right properties.
-        assert (ptx.getTx().getInputs().isEmpty());
-        assert (ptx.getTx().getOutputs().get(0).getData() instanceof IOUState);
-
-        Command command = ptx.getTx().getCommands().get(0);
-        assert (command.getValue() instanceof IOUContract.Commands.Issue);
-        assert (new HashSet<>(command.getSigners()).equals(
-                new HashSet<>(iou.getParticipants()
-                        .stream().map(el -> el.getOwningKey())
-                        .collect(Collectors.toList()))));
-
-        ptx.verifySignaturesExcept(borrower.getOwningKey(),
-                mockNetwork.getDefaultNotaryNode().getInfo().getLegalIdentitiesAndCerts().get(0).getOwningKey());
-    }
+//    @Test
+//    public void flowReturnsCorrectlyFormedPartiallySignedTransaction() throws Exception {
+//        Party lender = a.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
+//        Party borrower = b.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
+//
+//        IOUState iou = new IOUState(Currencies.POUNDS(10), lender, borrower);
+//        IOUIssueFlow.InitiatorFlow flow = new IOUIssueFlow.InitiatorFlow(iou);
+//
+//        Future<SignedTransaction> future = a.startFlow(flow);
+//        mockNetwork.runNetwork();
+//
+//        // Return the unsigned(!) SignedTransaction object from the IOUIssueFlow.
+//        SignedTransaction ptx = future.get();
+//
+//        // Print the transaction for debugging purposes.
+//        System.out.println(ptx.getTx());
+//
+//        // Check the transaction is well formed...
+//        // No outputs, one input IOUState and a command with the right properties.
+//        assert (ptx.getTx().getInputs().isEmpty());
+//        assert (ptx.getTx().getOutputs().get(0).getData() instanceof IOUState);
+//
+//        Command command = ptx.getTx().getCommands().get(0);
+//        assert (command.getValue() instanceof IOUContract.Commands.Issue);
+//        assert (new HashSet<>(command.getSigners()).equals(
+//                new HashSet<>(iou.getParticipants()
+//                        .stream().map(el -> el.getOwningKey())
+//                        .collect(Collectors.toList()))));
+//
+//        ptx.verifySignaturesExcept(borrower.getOwningKey(),
+//                mockNetwork.getDefaultNotaryNode().getInfo().getLegalIdentitiesAndCerts().get(0).getOwningKey());
+//    }
 
     /**
      * Task 2.
@@ -126,33 +123,33 @@ public class IOUIssueFlowTests {
      * Hint: You can verify on the builder directly prior to finalizing the transaction. This way
      * you can confirm the transaction prior to making it immutable with the signature.
      */
-    @Test
-    public void flowReturnsVerifiedPartiallySignedTransaction() throws Exception {
-        // Check that a zero amount IOU fails.
-        Party lender = a.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
-        Party borrower = b.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
-
-        IOUState zeroIou = new IOUState(Currencies.POUNDS(0), lender, borrower);
-        Future<SignedTransaction> futureOne = a.startFlow(new IOUIssueFlow.InitiatorFlow(zeroIou));
-        mockNetwork.runNetwork();
-
-        exception.expectCause(instanceOf(TransactionVerificationException.class));
-
-        futureOne.get();
-
-        // Check that an IOU with the same participants fails.
-        IOUState borrowerIsLenderIou = new IOUState(Currencies.POUNDS(10), lender, lender);
-        Future<SignedTransaction> futureTwo = a.startFlow(new IOUIssueFlow.InitiatorFlow(borrowerIsLenderIou));
-        mockNetwork.runNetwork();
-        exception.expectCause(instanceOf(TransactionVerificationException.class));
-        futureTwo.get();
-
-        // Check a good IOU passes.
-        IOUState iou = new IOUState(Currencies.POUNDS(10), lender, borrower);
-        Future<SignedTransaction> futureThree = a.startFlow(new IOUIssueFlow.InitiatorFlow(iou));
-        mockNetwork.runNetwork();
-        futureThree.get();
-    }
+//    @Test
+//    public void flowReturnsVerifiedPartiallySignedTransaction() throws Exception {
+//        // Check that a zero amount IOU fails.
+//        Party lender = a.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
+//        Party borrower = b.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
+//
+//        IOUState zeroIou = new IOUState(Currencies.POUNDS(0), lender, borrower);
+//        Future<SignedTransaction> futureOne = a.startFlow(new IOUIssueFlow.InitiatorFlow(zeroIou));
+//        mockNetwork.runNetwork();
+//
+//        exception.expectCause(instanceOf(TransactionVerificationException.class));
+//
+//        futureOne.get();
+//
+//        // Check that an IOU with the same participants fails.
+//        IOUState borrowerIsLenderIou = new IOUState(Currencies.POUNDS(10), lender, lender);
+//        Future<SignedTransaction> futureTwo = a.startFlow(new IOUIssueFlow.InitiatorFlow(borrowerIsLenderIou));
+//        mockNetwork.runNetwork();
+//        exception.expectCause(instanceOf(TransactionVerificationException.class));
+//        futureTwo.get();
+//
+//        // Check a good IOU passes.
+//        IOUState iou = new IOUState(Currencies.POUNDS(10), lender, borrower);
+//        Future<SignedTransaction> futureThree = a.startFlow(new IOUIssueFlow.InitiatorFlow(iou));
+//        mockNetwork.runNetwork();
+//        futureThree.get();
+//    }
 
     /**
      * IMPORTANT: Review the {@link CollectSignaturesFlow} before continuing here.
@@ -161,7 +158,7 @@ public class IOUIssueFlowTests {
      * TODO: Amend the {@link IOUIssueFlow} to collect the [otherParty]'s signature.
      * Hint:
      * On the Initiator side:
-     * - Get a set of the required signers from the participants who are not the node - refer to Task 6 of IOUIssueTests
+     * - Get a set of the required signers from the participants who are not the node - refer to Task 6 of SendMessageTests
      * - - [getOurIdentity()] will give you the identity of the node you are operating as
      * - Use [initateFlow] to get a set of {@link FlowSession} objects
      * - - Using [state.participants] as a base to determine the sessions needed is recommended. [participants] is on
@@ -178,19 +175,19 @@ public class IOUIssueFlowTests {
      * Using this flow you abstract away all the back-and-forth communication required for parties to sign a
      * transaction.
      */
-    @Test
-    public void flowReturnsTransactionSignedByBothParties() throws Exception {
-        Party lender = a.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
-        Party borrower = b.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
-        IOUState iou = new IOUState(Currencies.POUNDS(10), lender, borrower);
-        IOUIssueFlow.InitiatorFlow flow = new IOUIssueFlow.InitiatorFlow(iou);
-
-        Future<SignedTransaction> future = a.startFlow(flow);
-        mockNetwork.runNetwork();
-
-        SignedTransaction stx = future.get();
-        stx.verifyRequiredSignatures();
-    }
+//    @Test
+//    public void flowReturnsTransactionSignedByBothParties() throws Exception {
+//        Party lender = a.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
+//        Party borrower = b.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
+//        IOUState iou = new IOUState(Currencies.POUNDS(10), lender, borrower);
+//        IOUIssueFlow.InitiatorFlow flow = new IOUIssueFlow.InitiatorFlow(iou);
+//
+//        Future<SignedTransaction> future = a.startFlow(flow);
+//        mockNetwork.runNetwork();
+//
+//        SignedTransaction stx = future.get();
+//        stx.verifyRequiredSignatures();
+//    }
 
     /**
      * Task 4.
@@ -204,24 +201,24 @@ public class IOUIssueFlowTests {
      * inputs in the transaction that could be double spent! If we added a timestamp to this transaction then we
      * would require the notary's signature as notaries act as a timestamping authority.
      */
-    @Test
-    public void flowRecordsTheSameTransactionInBothPartyVaults() throws Exception {
-        Party lender = a.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
-        Party borrower = b.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
-        IOUState iou = new IOUState(Currencies.POUNDS(10), lender, borrower);
-        IOUIssueFlow.InitiatorFlow flow = new IOUIssueFlow.InitiatorFlow(iou);
-
-        Future<SignedTransaction> future = a.startFlow(flow);
-        mockNetwork.runNetwork();
-        SignedTransaction stx = future.get();
-        System.out.printf("Signed transaction hash: %h\n", stx.getId());
-
-        Arrays.asList(a, b).stream().map(el ->
-                el.getServices().getValidatedTransactions().getTransaction(stx.getId())
-        ).forEach(el -> {
-            SecureHash txHash = el.getId();
-            System.out.printf("$txHash == %h\n", stx.getId());
-            assertEquals(stx.getId(), txHash);
-        });
-    }
+//    @Test
+//    public void flowRecordsTheSameTransactionInBothPartyVaults() throws Exception {
+//        Party lender = a.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
+//        Party borrower = b.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
+//        IOUState iou = new IOUState(Currencies.POUNDS(10), lender, borrower);
+//        IOUIssueFlow.InitiatorFlow flow = new IOUIssueFlow.InitiatorFlow(iou);
+//
+//        Future<SignedTransaction> future = a.startFlow(flow);
+//        mockNetwork.runNetwork();
+//        SignedTransaction stx = future.get();
+//        System.out.printf("Signed transaction hash: %h\n", stx.getId());
+//
+//        Arrays.asList(a, b).stream().map(el ->
+//                el.getServices().getValidatedTransactions().getTransaction(stx.getId())
+//        ).forEach(el -> {
+//            SecureHash txHash = el.getId();
+//            System.out.printf("$txHash == %h\n", stx.getId());
+//            assertEquals(stx.getId(), txHash);
+//        });
+//    }
 }

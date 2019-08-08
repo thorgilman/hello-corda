@@ -9,21 +9,14 @@ import net.corda.core.utilities.getOrThrow
 import net.corda.finance.*
 import net.corda.testing.internal.chooseIdentityAndCert
 import net.corda.testing.node.*
-import net.corda.training.contract.IOUContract
-import net.corda.training.state.IOUState
+import net.corda.training.SendMessageFlowResponder
 import org.junit.*
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-/**
- * Practical exercise instructions Flows part 1.
- * Uncomment the unit tests and use the hints + unit test body to complete the Flows such that the unit tests pass.
- * Note! These tests rely on Quasar to be loaded, set your run configuration to "-ea -javaagent:lib/quasar.jar"
- * Run configuration can be edited in IntelliJ under Run -> Edit Configurations -> VM options
- * On some machines/configurations you may have to provide a full path to the quasar.jar file.
- * On some machines/configurations you may have to use the "JAR manifest" option for shortening the command line.
- */
-class IOUIssueFlowTests {
+/** Flow Tests **/
+
+class SendMessageFlowTests {
     lateinit var mockNetwork: MockNetwork
     lateinit var a: StartedMockNode
     lateinit var b: StartedMockNode
@@ -36,7 +29,7 @@ class IOUIssueFlowTests {
         b = mockNetwork.createNode(MockNodeParameters())
         val startedNodes = arrayListOf(a, b)
         // For real nodes this happens automatically, but we have to manually register the flow for tests
-        startedNodes.forEach { it.registerInitiatedFlow(IOUIssueFlowResponder::class.java) }
+        startedNodes.forEach { it.registerInitiatedFlow(SendMessageFlowResponder::class.java) }
         mockNetwork.runNetwork()
     }
 
