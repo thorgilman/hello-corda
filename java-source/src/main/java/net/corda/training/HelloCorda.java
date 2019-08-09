@@ -6,11 +6,14 @@ import net.corda.core.contracts.*;
 import net.corda.core.flows.*;
 import net.corda.core.identity.AbstractParty;
 import net.corda.core.identity.Party;
+import net.corda.core.node.ServiceHub;
 import net.corda.core.transactions.LedgerTransaction;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 import org.jetbrains.annotations.NotNull;
 
+import java.security.SignatureException;
+import java.util.Arrays;
 import java.util.List;
 
 import static net.corda.core.contracts.ContractsDSL.requireSingleCommand;
@@ -19,9 +22,9 @@ import static net.corda.core.contracts.ContractsDSL.requireThat;
 /* Flow */
 public class HelloCorda {
 
+    @InitiatingFlow
     public static class SendMessageFlow extends FlowLogic<SignedTransaction> {
         private final Party target;
-
         public SendMessageFlow(Party target) { this.target = target; }
 
         @Suspendable
@@ -35,19 +38,23 @@ public class HelloCorda {
             final MessageState state = new MessageState(origin, target, "Hello Corda!");
             final Command<MessageContract.Commands.SendMessage> command = new Command<>(
                 new MessageContract.Commands.SendMessage(),
-                ImmutableList.of(origin.getOwningKey())
+                Arrays.asList(origin.getOwningKey())
             );
 
             // Create & sign transaction
             final TransactionBuilder builder = new TransactionBuilder(notary);
-            builder.addOutputState(state, MessageContract.MESSAGE_CONTRACT_ID);
+            builder.addOutputState(state, MessageContract.ID);
             builder.addCommand(command);
-            builder.verify(getServiceHub());
+
+            //builder.verify(getServiceHub());
+
             final SignedTransaction stx = getServiceHub().signInitialTransaction(builder);
+
+
 
             // Send transaction to other party and finalize
             final FlowSession targetSession = initiateFlow(target);
-            return subFlow(new FinalityFlow(stx, ImmutableList.of(targetSession)));
+            return subFlow(new FinalityFlow(stx, Arrays.asList(targetSession)));
         }
     }
 
@@ -72,7 +79,7 @@ public class HelloCorda {
 /* Contract */
 class MessageContract implements Contract {
 
-    public static final String MESSAGE_CONTRACT_ID = "net.corda.training.MessageContract";
+    public static final String ID = "net.corda.training.MessageContract";
 
     interface Commands extends CommandData {
         class SendMessage extends TypeOnlyCommandData implements Commands{}
@@ -80,25 +87,26 @@ class MessageContract implements Contract {
 
     @Override
     public void verify(LedgerTransaction tx) {
-        final Commands commandData = requireSingleCommand(tx.getCommands(), Commands.class).getValue();
-        requireThat( require -> {
-            require.using("Must be a SendMessage command", commandData.equals(new Commands.SendMessage()));
-            require.using("There should be no input state.", tx.getInputStates().isEmpty());
-            require.using("There should one output state.", tx.getOutputStates().size() == 1);
-            require.using("The output state must be a MessageState.", tx.getOutputStates().get(0) instanceof MessageState);
 
-            // TODO: Add a constraint that doesn't allow a message to be sent with the default content
-            return null;
-        });
+        final Commands commandData = requireSingleCommand(tx.getCommands(), Commands.class).getValue();
+//        requireThat( require -> {
+//            require.using("Must be a SendMessage command", commandData.equals(new Commands.SendMessage()));
+//            require.using("There should be no input state.", tx.getInputStates().isEmpty());
+//            require.using("There should one output state.", tx.getOutputStates().size() == 1);
+//            require.using("The output state must be a MessageState.", tx.getOutputStates().get(0) instanceof MessageState);
+//
+//            // TODO: Add a constraint that doesn't allow a message to be sent with the default content
+//            return null;
+//        });
     }
 }
 
 /* State */
 @BelongsToContract(MessageContract.class)
 class MessageState implements ContractState {
-    private final Party origin;
-    private final Party target;
-    private final String content;
+    final Party origin;
+    final Party target;
+    final String content;
     public MessageState(Party origin, Party target, String content) {
         this.origin = origin;
         this.target = target;

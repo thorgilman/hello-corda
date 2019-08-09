@@ -8,13 +8,11 @@ import net.corda.core.transactions.SignedTransaction
 import net.corda.core.transactions.TransactionBuilder
 import co.paralleluniverse.fibers.Suspendable as Suspendable
 
-
 /* Flow */
 @InitiatingFlow
 @StartableByRPC
-// TODO: Change this line
-//class SendMessageFlow(val target: Party) : FlowLogic<SignedTransaction>() {
- class SendMessageFlow(private val target: Party, private val content: String) : FlowLogic<SignedTransaction>() {
+/* TODO(#1): Add an additional parameter to SendMessageFlow that so we can pass a customized message */
+class SendMessageFlow(private val target: Party /*, private val content: String */) : FlowLogic<SignedTransaction>() {
 
     @Suspendable
     override fun call(): SignedTransaction {
@@ -24,13 +22,12 @@ import co.paralleluniverse.fibers.Suspendable as Suspendable
 
         // Create transaction items
         val command = Command(MessageContract.SendMessage(), listOf(origin.owningKey))
-        // TODO: Change this line
-        //val noteState = MessageState(me, target)
-        val noteState = MessageState(origin, target, content = content)
+        /* TODO(#2): Override the content parameter of MessageState with the parameter we created for SendMessageFlow */
+        val noteState = MessageState(origin, target /*, content*/)
         val stateAndContract = StateAndContract(noteState, MessageContract.ID)
 
         // Create & sign transaction
-        val builder = TransactionBuilder(notary = notary).withItems(stateAndContract, command)
+        val builder = TransactionBuilder(notary).withItems(stateAndContract, command)
         val stx = serviceHub.signInitialTransaction(builder)
         stx.verify(serviceHub)
 
@@ -61,18 +58,15 @@ class MessageContract: Contract {
         val command = tx.commands.requireSingleCommand<SendMessage>()
         "There should be no input state." using tx.inputStates.isEmpty()
         "There should be one output state." using (tx.outputStates.size == 1)
-        "The output state must be a MessageState." using (tx.outputStates.single() is MessageState)
 
-        // TODO: Add a constraint that doesn't allow a message to be sent with the default content
-         val outputState = tx.outputStates.single() as MessageState
-         "The default message should be updated!" using (outputState.content != "Hello Corda!")
+        /* TODO(#3): Add a constraint that doesn't allow you to send messages to yourself! */
+//        val outputState = tx.outputStates.single() as MessageState
+//        "You cannot send messages to yourself" using (outputState.target != outputState.origin)
     }
 }
 
 /* State */
 @BelongsToContract(MessageContract::class)
-data class MessageState(val origin: Party,
-                        val target: Party,
-                        val content: String = "Hello Corda!"): ContractState {
+data class MessageState(val origin: Party, val target: Party, val content: String = "Hello Corda!"): ContractState {
     override val participants = listOf(origin, target)
 }

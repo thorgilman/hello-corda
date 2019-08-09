@@ -32,7 +32,7 @@ class MessageStateTests {
         MessageState::class.java.getDeclaredField("content")
         assertEquals(MessageState::class.java.getDeclaredField("content").type, String::class.java)
     }
-    
+
     @Test
     fun originIsParticipant() {
         val state = MessageState(ALICE.party, BOB.party, "HEY")
