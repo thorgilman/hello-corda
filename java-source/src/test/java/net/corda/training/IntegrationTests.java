@@ -4,6 +4,7 @@ import net.corda.core.concurrent.CordaFuture;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.core.identity.Party;
 import net.corda.core.transactions.SignedTransaction;
+import net.corda.node.services.persistence.NodeAttachmentService;
 import net.corda.testing.node.*;
 import org.junit.After;
 import org.junit.Before;
@@ -19,8 +20,8 @@ public class IntegrationTests {
 
     @Before
     public void setup() {
-        MockNetworkParameters mockNetworkParameters = new MockNetworkParameters().withCordappsForAllNodes(Arrays.asList(TestCordapp.findCordapp("net.corda.training")));
-                //withNotarySpecs(Arrays.asList(new MockNetworkNotarySpec(new CordaX500Name("Notary", "London", "GB"))));
+        MockNetworkParameters mockNetworkParameters = new MockNetworkParameters().withCordappsForAllNodes(
+                Arrays.asList(TestCordapp.findCordapp("net.corda.training")));
         mockNetwork = new MockNetwork(mockNetworkParameters);
         System.out.println(mockNetwork);
 
@@ -48,27 +49,11 @@ public class IntegrationTests {
         Party partyA = nodeA.getInfo().getLegalIdentities().get(0);
         Party partyB = nodeB.getInfo().getLegalIdentities().get(0);
 
-        HelloCorda.SendMessageFlow flow = new HelloCorda.SendMessageFlow(partyB);
-        CordaFuture<SignedTransaction> future = nodeA.startFlow(flow);
+        CordaFuture<SignedTransaction> future = nodeA.startFlow(new HelloCorda.SendMessageFlow(partyB));
         mockNetwork.runNetwork();
+
         SignedTransaction tx = future.get();
 
-//        MessageState state = (MessageState)tx.getTx().getOutputStates().get(0);
-//
-//        MessageState stateNodeA = nodeA.getServices().getVaultService().queryBy(MessageState.class).getStates().get(0).getState().getData();
-//        MessageState stateNodeB = nodeB.getServices().getVaultService().queryBy(MessageState.class).getStates().get(0).getState().getData();
-//
-//        assert (state.target == stateNodeA.target);
-//        assert (state.origin == stateNodeA.origin);
-//
-//        assert (state.target == stateNodeB.target);
-//        assert (state.origin == stateNodeB.origin);
-
-
-
     }
-
-
-
 
 }
