@@ -22,7 +22,7 @@ class IntegrationTests {
     fun setup() {
         nodeA = mockNetwork.createNode(MockNodeParameters())
         nodeB = mockNetwork.createNode(MockNodeParameters())
-        listOf(nodeA, nodeB).forEach { it.registerInitiatedFlow(SendMessageFlowResponder::class.java) }
+        listOf(nodeA, nodeB).forEach { it.registerInitiatedFlow(MessageFlow.Responder::class.java) }
     }
 
     @After
@@ -33,15 +33,15 @@ class IntegrationTests {
      * Try running it below.
      * When you are ready to test your solution, comment out this test and uncomment the following test.
      **/
-    @Ignore("Uncomment me when you are ready to start Task #1")
     @Test
     fun `Baseline Test`() {
          val partyA = nodeA.info.chooseIdentity()
          val partyB = nodeB.info.chooseIdentity()
 
-         val future = nodeA.startFlow(SendMessageFlow(partyB))
+         val future = nodeA.startFlow(MessageFlow.Initiator(partyB))
          mockNetwork.runNetwork()
          val tx = future.getOrThrow()
+
          val state = tx.coreTransaction.outputsOfType<MessageState>().single()
          assert(state.origin == partyA)
          assert(state.target == partyB)
@@ -54,12 +54,9 @@ class IntegrationTests {
 
          val stateA = nodeAStates.get(0).state.data
          val stateB = nodeBStates.get(0).state.data
-         assert(stateA.content == stateB.content)
          assert(stateA.origin == stateB.origin)
          assert(stateA.target == stateB.target)
-
-         assert(stateA.content == "Hello World!")
-         assert(stateB.content == "Hello World!")
+         assert(stateA.content == stateB.content)
     }
 
 //     /**

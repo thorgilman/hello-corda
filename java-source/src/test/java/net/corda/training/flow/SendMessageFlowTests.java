@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 import java.util.concurrent.Future;
 import java.util.*;
 
-import net.corda.training.HelloCorda;
+import net.corda.training.MessageFlow;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 
@@ -54,7 +54,7 @@ public class SendMessageFlowTests {
         startedNodes.add(b);
 
         // For real nodes this happens automatically, but we have to manually register the flow for tests
-        startedNodes.forEach(el -> el.registerInitiatedFlow(HelloCorda.SendMessageFlowResponder.class));
+        startedNodes.forEach(el -> el.registerInitiatedFlow(MessageFlow.Responder.class));
         mockNetwork.runNetwork();
     }
 
