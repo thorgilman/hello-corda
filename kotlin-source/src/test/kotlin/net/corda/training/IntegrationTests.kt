@@ -61,13 +61,12 @@ class IntegrationTests {
 
 //     /**
 //     **/
-//    @Ignore("Comment me when you are ready to start Task #1")
 //    @Test
 //    fun `Task #1 Checkpoint`() {
 //         val partyA = nodeA.info.chooseIdentity()
 //         val partyB = nodeB.info.chooseIdentity()
 //
-//         val future = nodeA.startFlow(SendMessageFlow(partyB, "Hello Corda!"))
+//         val future = nodeA.startFloww(SendMessageFlow(partyB, "Hello Corda!"))
 //         mockNetwork.runNetwork()
 //         val tx = future.getOrThrow()
 //         val state = tx.coreTransaction.outputsOfType<MessageState>().single()
@@ -84,7 +83,6 @@ class IntegrationTests {
 //         assert(stateB.content == "Hello Corda!")
 //    }
 //
-//    @Ignore("Comment me when you are ready to start Task #2")
 //    @Test
 //    fun `Task #2 Checkpoint`() {
 //        val partyA = nodeA.info.chooseIdentity()
@@ -101,7 +99,6 @@ class IntegrationTests {
 //
 //    }
 //
-//    @Ignore("Comment me when you are ready to start Task #3")
 //    @Test
 //    fun `Task #3 Checkpoint`() {
 //        val partyA = nodeA.info.chooseIdentity()

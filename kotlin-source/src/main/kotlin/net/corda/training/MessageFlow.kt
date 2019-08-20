@@ -39,10 +39,10 @@ object MessageFlow {
         }
     }
     @InitiatedBy(Initiator::class)
-    class Responder(val counterpartySession: FlowSession) : FlowLogic<SignedTransaction>() {
+    class Responder(val otherPartySession: FlowSession) : FlowLogic<SignedTransaction>() {
         @Suspendable
         override fun call(): SignedTransaction {
-            return subFlow(ReceiveFinalityFlow(counterpartySession))
+            return subFlow(ReceiveFinalityFlow(otherPartySession))
         }
     }
 

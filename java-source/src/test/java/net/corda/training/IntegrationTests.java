@@ -75,4 +75,23 @@ public class IntegrationTests {
         assert(nodeAState.content.equals(nodeBState.content));
     }
 
+
+    @Test
+    public void Task1Checkpoint() {
+        Party partyA = nodeA.getInfo().getLegalIdentities().get(0);
+        Party partyB = nodeB.getInfo().getLegalIdentities().get(0);
+        MessageState state = new MessageState(partyA, partyB, "Hey!");
+        assert(state.content.equals("Hey!"));
+    }
+
+    @Test
+    public void Task2Checkpoint() {
+        Party partyA = nodeA.getInfo().getLegalIdentities().get(0);
+        Party partyB = nodeB.getInfo().getLegalIdentities().get(0);
+        MessageState state = new MessageState(partyA, partyB, "Hey!");
+        assert(state.content.equals("Hey!"));
+    }
+
+
+
 }
