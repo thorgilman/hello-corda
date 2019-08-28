@@ -1,4 +1,4 @@
-package net.corda.training
+package net.corda.hello
 
 import net.corda.core.contracts.BelongsToContract
 import net.corda.core.contracts.ContractState

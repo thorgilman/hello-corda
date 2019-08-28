@@ -1,4 +1,4 @@
-package net.corda.training
+package net.corda.hello
 
 import co.paralleluniverse.fibers.Suspendable
 import net.corda.core.contracts.Command

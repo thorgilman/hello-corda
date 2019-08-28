@@ -1,4 +1,4 @@
-package net.corda.training
+package net.corda.hello
 
 import net.corda.core.contracts.Contract
 import net.corda.core.contracts.TypeOnlyCommandData
@@ -10,8 +10,8 @@ import net.corda.core.transactions.LedgerTransaction
 /* TODO(#2): Add a constraint that ensures that our transaction has no input state! */
 class MessageContract: Contract {
 
-    companion object { const val ID = "net.corda.training.MessageContract" }
-    class SendMessage : TypeOnlyCommandData()  // TODO: Is this ok?
+    companion object { const val ID = "net.corda.hello.MessageContract" }
+    class SendMessage : TypeOnlyCommandData()
 
     override fun verify(tx: LedgerTransaction) = requireThat {
         val command = tx.commands.requireSingleCommand<SendMessage>()

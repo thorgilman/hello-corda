@@ -1,30 +1,18 @@
-package net.corda.training.flow;
+package net.corda.hello.flow;
 
 import net.corda.core.contracts.Command;
-import net.corda.core.contracts.TransactionVerificationException;
-import net.corda.core.flows.FlowLogic;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.core.transactions.SignedTransaction;
-import net.corda.finance.*;
-import net.corda.core.node.NodeInfo;
 import net.corda.testing.node.*;
 import net.corda.core.identity.Party;
-import net.corda.core.crypto.SecureHash;
 import net.corda.core.flows.*;
 import net.corda.core.transactions.TransactionBuilder;
 
-import java.util.stream.Collectors;
-import java.util.concurrent.Future;
 import java.util.*;
 
-import net.corda.training.MessageFlow;
+import net.corda.hello.MessageFlow;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
-
-import static org.junit.Assert.*;
-import static org.hamcrest.core.IsInstanceOf.*;
-
-import java.security.PublicKey;
 
 
 /**
@@ -40,7 +28,7 @@ public class SendMessageFlowTests {
     public void setup() {
         MockNetworkParameters mockNetworkParameters = new MockNetworkParameters().withCordappsForAllNodes(
                 Arrays.asList(
-                        TestCordapp.findCordapp("net.corda.training")
+                        TestCordapp.findCordapp("net.corda.hello")
                 )
         ).withNotarySpecs(Arrays.asList(new MockNetworkNotarySpec(new CordaX500Name("Notary", "London", "GB"))));
         mockNetwork = new MockNetwork(mockNetworkParameters);
@@ -74,7 +62,7 @@ public class SendMessageFlowTests {
      * - There's a lot to do to get this unit test to pass!
      * - Create a {@link TransactionBuilder} and pass it a notary reference.
      * -- A notary {@link Party} object can be obtained from [FlowLogic.getServiceHub().getNetworkMapCache().getNotaryIdentities()].
-     * -- In this training project there is only one notary
+     * -- In this hello project there is only one notary
      * - Create a new {@link Command} object with the [IOUContract.Commands.Issue] type
      * -- The required signers will be the same as the state's participants
      * -- Add the {@link Command} to the transaction builder [addCommand].

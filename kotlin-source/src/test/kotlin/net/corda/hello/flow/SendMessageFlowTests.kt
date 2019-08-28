@@ -1,18 +1,12 @@
-package net.corda.training.flow
+package net.corda.hello.flow
 
 import net.corda.core.contracts.Command
-import net.corda.core.contracts.TransactionVerificationException
 import net.corda.core.flows.FlowLogic
 import net.corda.core.identity.CordaX500Name
 import net.corda.core.transactions.SignedTransaction
-import net.corda.core.utilities.getOrThrow
-import net.corda.finance.*
-import net.corda.testing.internal.chooseIdentityAndCert
 import net.corda.testing.node.*
-import net.corda.training.SendMessageFlowResponder
+import net.corda.hello.SendMessageFlowResponder
 import org.junit.*
-import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 
 /** Flow Tests **/
 
@@ -23,7 +17,7 @@ class SendMessageFlowTests {
 
     @Before
     fun setup() {
-        mockNetwork = MockNetwork(listOf("net.corda.training"),
+        mockNetwork = MockNetwork(listOf("net.corda.hello"),
                 notarySpecs = listOf(MockNetworkNotarySpec(CordaX500Name("Notary","London","GB"))))
         a = mockNetwork.createNode(MockNodeParameters())
         b = mockNetwork.createNode(MockNodeParameters())
@@ -46,7 +40,7 @@ class SendMessageFlowTests {
      * - There's a lot to do to get this unit test to pass!
      * - Create a [TransactionBuilder] and pass it a notary reference.
      * -- A notary [Party] object can be obtained from [FlowLogic.serviceHub.networkMapCache].
-     * -- In this training project there is only one notary
+     * -- In this hello project there is only one notary
      * - Create an [IOUContract.Commands.Issue] inside a new [Command].
      * -- The required signers will be the same as the state's participants
      * -- Add the [Command] to the transaction builder [addCommand].

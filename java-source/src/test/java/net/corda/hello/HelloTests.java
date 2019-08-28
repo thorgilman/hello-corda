@@ -1,23 +1,20 @@
-package net.corda.training;
+package net.corda.hello;
 
 import com.google.common.collect.ImmutableList;
 import net.corda.core.concurrent.CordaFuture;
 import net.corda.core.contracts.StateAndRef;
-import net.corda.core.identity.CordaX500Name;
 import net.corda.core.identity.Party;
 import net.corda.core.transactions.SignedTransaction;
-import net.corda.node.services.persistence.NodeAttachmentService;
 import net.corda.testing.node.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import static junit.framework.TestCase.assertTrue;
 
-public class IntegrationTests {
+public class HelloTests {
 
     private MockNetwork mockNetwork;
     private StartedMockNode nodeA, nodeB;
@@ -25,28 +22,27 @@ public class IntegrationTests {
     @Before
     public void setup() {
         MockNetworkParameters mockNetworkParameters = new MockNetworkParameters().withCordappsForAllNodes(
-                Arrays.asList(TestCordapp.findCordapp("net.corda.training")));
+                Arrays.asList(TestCordapp.findCordapp("net.corda.hello")));
         mockNetwork = new MockNetwork(mockNetworkParameters);
         System.out.println(mockNetwork);
-
         nodeA = mockNetwork.createNode(new MockNodeParameters());
         nodeB = mockNetwork.createNode(new MockNodeParameters());
-
         ArrayList<StartedMockNode> startedNodes = new ArrayList<>();
         startedNodes.add(nodeA);
         startedNodes.add(nodeB);
-
-        // For real nodes this happens automatically, but we have to manually register the flow for tests
         startedNodes.forEach(el -> el.registerInitiatedFlow(MessageFlow.Responder.class));
         mockNetwork.runNetwork();
     }
-
 
     @After
     public void tearDown() {
         mockNetwork.stopNodes();
     }
 
+    /**
+     * When you are ready to test your solution, comment out the BaselineTest and uncomment the SolutionTest.
+     * Then you can run the SolutionTest from the run configurations or by clicking on the green arrow to the right of the test.
+     **/
 
     @Test
     public void BaselineTest() throws Exception {
@@ -75,23 +71,30 @@ public class IntegrationTests {
         assert(nodeAState.content.equals(nodeBState.content));
     }
 
-
-    @Test
-    public void Task1Checkpoint() {
-        Party partyA = nodeA.getInfo().getLegalIdentities().get(0);
-        Party partyB = nodeB.getInfo().getLegalIdentities().get(0);
-        MessageState state = new MessageState(partyA, partyB, "Hey!");
-        assert(state.content.equals("Hey!"));
-    }
-
-    @Test
-    public void Task2Checkpoint() {
-        Party partyA = nodeA.getInfo().getLegalIdentities().get(0);
-        Party partyB = nodeB.getInfo().getLegalIdentities().get(0);
-        MessageState state = new MessageState(partyA, partyB, "Hey!");
-        assert(state.content.equals("Hey!"));
-    }
-
-
+//    @Test
+//    public void SolutionTest() {
+//        Party partyA = nodeA.getInfo().getLegalIdentities().get(0);
+//        Party partyB = nodeB.getInfo().getLegalIdentities().get(0);
+//
+//        /* Test Task #1 */
+//        MessageState state = new MessageState(partyA, partyB, "Hey!");
+//        assertTrue("Task #1 Failed!", state.content.equals("Hey!"));
+//
+//        /* Test Task #2 */
+//        nodeA.startFlow(new MessageFlow.Initiator(partyB, "Howdy!"));
+//        mockNetwork.runNetwork();
+//
+//        /* Test Task #3 */
+//        try {
+//            CordaFuture future = nodeA.startFlow(new MessageFlow.Initiator(partyB, ""));
+//            mockNetwork.runNetwork();
+//            future.get();
+//            assertTrue("Task #3 Failed!",false);
+//        }
+//        catch (Exception e) {
+//            assertTrue("Task #3 Failed!", e.getCause().getCause() instanceof IllegalArgumentException);
+//            assertTrue("Task #3 Failed!", e.getCause().getCause().getMessage().equals("Failed requirement: The content cannot be an empty String."));
+//        }
+//    }
 
 }

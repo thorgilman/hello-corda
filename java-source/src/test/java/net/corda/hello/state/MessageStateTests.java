@@ -1,16 +1,10 @@
-package net.corda.training.state;
+package net.corda.hello.state;
 
 import net.corda.core.contracts.*;
 import net.corda.core.identity.Party;
 import net.corda.finance.*;
 
-import static net.corda.training.TestUtils.*;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Constructor;
-import org.junit.Test;
 import java.util.*;
-import static org.junit.Assert.*;
 
 /**
  * Practical exercise instructions.

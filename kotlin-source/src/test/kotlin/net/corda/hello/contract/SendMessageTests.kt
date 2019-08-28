@@ -1,11 +1,12 @@
-package net.corda.training.contract
+package net.corda.hello.contract
 
 import net.corda.core.contracts.*
-import net.corda.finance.*
+import net.corda.hello.ALICE
+import net.corda.hello.BOB
 import net.corda.testing.contracts.DummyState
 import net.corda.testing.node.MockServices
 import net.corda.testing.node.ledger
-import net.corda.training.*
+import net.corda.hello.*
 import org.junit.*
 
 /** Contract Tests **/
@@ -13,7 +14,7 @@ import org.junit.*
 class SendMessageTests {
     // A pre-defined dummy command.
     class DummyCommand : TypeOnlyCommandData()
-    private var ledgerServices = MockServices(listOf("net.corda.training"))
+    private var ledgerServices = MockServices(listOf("net.corda.hello"))
 
     @Test
     fun mustIncludeSendMessageCommand() {

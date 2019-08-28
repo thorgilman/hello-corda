@@ -1,4 +1,4 @@
-package net.corda.training
+package net.corda.hello
 
 import net.corda.core.identity.CordaX500Name
 import net.corda.testing.core.TestIdentity

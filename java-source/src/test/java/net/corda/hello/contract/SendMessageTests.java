@@ -1,9 +1,9 @@
-package net.corda.training.contract;
+package net.corda.hello.contract;
 
 import net.corda.core.contracts.*;
+import net.corda.hello.state.MessageStateTests;
 import net.corda.testing.node.MockServices;
 import net.corda.core.transactions.LedgerTransaction;
-import net.corda.training.state.MessageStateTests;
 
 import java.util.Arrays;
 
@@ -20,7 +20,7 @@ public class SendMessageTests {
     }
 
     static private final MockServices ledgerServices = new MockServices(
-            Arrays.asList("net.corda.training", "net.corda.finance.contracts")
+            Arrays.asList("net.corda.hello", "net.corda.finance.contracts")
     );
 
     /**

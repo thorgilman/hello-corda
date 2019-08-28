@@ -1,4 +1,4 @@
-package net.corda.training;
+package net.corda.hello;
 
 import com.google.common.collect.ImmutableList;
 import net.corda.core.contracts.BelongsToContract;
@@ -16,8 +16,7 @@ import java.util.List;
  **/
 
 /* State */
-
-/** BEFORE
+///** BEFORE
 @BelongsToContract(MessageContract.class)
 class MessageState implements ContractState {
     final Party origin;
@@ -31,9 +30,9 @@ class MessageState implements ContractState {
     @Override
     public List<AbstractParty> getParticipants() { return ImmutableList.of(origin, target); }
 }
- **/
+ //**/
 
-// /** AFTER
+ /** SOLUTION
 @BelongsToContract(MessageContract.class)
 class MessageState implements ContractState {
     final Party origin;
@@ -48,4 +47,4 @@ class MessageState implements ContractState {
     @Override
     public List<AbstractParty> getParticipants() { return ImmutableList.of(origin, target); }
 }
-// **/
+ **/

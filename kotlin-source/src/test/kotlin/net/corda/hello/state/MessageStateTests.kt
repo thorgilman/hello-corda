@@ -1,13 +1,10 @@
-package net.corda.training.state
+package net.corda.hello.state
 
-import net.corda.core.contracts.*
 import net.corda.core.identity.Party
-import net.corda.finance.*
-import net.corda.training.ALICE
-import net.corda.training.BOB
-import net.corda.training.MessageState
+import net.corda.hello.ALICE
+import net.corda.hello.BOB
+import net.corda.hello.MessageState
 import org.junit.Test
-import java.util.*
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 
