@@ -54,7 +54,6 @@ public class HelloTests {
         SignedTransaction tx = future.get();
 
         MessageState state = (MessageState) tx.getTx().getOutputStates().get(0);
-        assert(state.content.equals("Hello Corda!"));
         assert(state.origin.equals(partyA));
         assert(state.target.equals(partyB));
         assert(state.getParticipants().equals(ImmutableList.of(partyA, partyB)));
@@ -68,7 +67,6 @@ public class HelloTests {
         MessageState nodeBState = nodeBStates.get(0).getState().getData();
         assert(nodeAState.origin.equals(nodeBState.origin));
         assert(nodeAState.target.equals(nodeBState.target));
-        assert(nodeAState.content.equals(nodeBState.content));
     }
 
 //    @Test

@@ -16,10 +16,10 @@ import java.util.Arrays;
  * Lastly, pass in 'content' as an additional parameter when we create our MessageState object.
  **/
 
-/* Flow */
-// /** BEFORE
+// /**
 public class MessageFlow {
 
+    @StartableByRPC
     @InitiatingFlow
     public static class Initiator extends FlowLogic<SignedTransaction> {
 
@@ -51,12 +51,13 @@ public class MessageFlow {
         }
     }
 
-
     @InitiatedBy(Initiator.class)
     public static class Responder extends FlowLogic<SignedTransaction> {
 
         private final FlowSession otherPartySession;
-        public Responder(FlowSession otherPartySession) { this.otherPartySession = otherPartySession; }
+        public Responder(FlowSession otherPartySession) {
+            this.otherPartySession = otherPartySession;
+        }
 
         @Suspendable
         @Override
@@ -70,6 +71,7 @@ public class MessageFlow {
  /* SOLUTION
 public class MessageFlow {
 
+    @StartableByRPC
     @InitiatingFlow
     public static class Initiator extends FlowLogic<SignedTransaction> {
 

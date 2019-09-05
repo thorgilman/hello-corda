@@ -2,7 +2,6 @@ package net.corda.hello;
 
 import net.corda.core.contracts.*;
 import net.corda.core.transactions.LedgerTransaction;
-import org.apache.commons.jexl3.JxltEngine;
 
 import java.util.Collections;
 import static net.corda.core.contracts.ContractsDSL.requireSingleCommand;
@@ -14,10 +13,9 @@ import net.corda.hello.MessageContract.Commands.SendMessage;
  * Make sure the message in the require statement is as follows "The content cannot be an empty String.".
  **/
 
-/* Contract */
-// /** BEFORE
+// /**
 public class MessageContract implements Contract {
-    static final String ID = "net.corda.hello.MessageContract";
+    public static final String ID = "net.corda.hello.MessageContract";
     public interface Commands extends CommandData {
         class SendMessage extends TypeOnlyCommandData implements Commands{}
     }
@@ -38,8 +36,7 @@ public class MessageContract implements Contract {
 
  /** SOLUTION
  public class MessageContract implements Contract {
-     static final String ID = "net.corda.hello.MessageContract";
-
+     public static final String ID = "net.corda.hello.MessageContract";
      public interface Commands extends CommandData {
         class SendMessage extends TypeOnlyCommandData implements Commands{}
      }
