@@ -17,7 +17,6 @@ import java.util.List;
  This parameter should set a local parameter that is also named ‘content'.
  **/
 
-///**
 @BelongsToContract(MessageContract.class)
 public class MessageState implements ContractState {
     public final Party origin;
@@ -31,22 +30,3 @@ public class MessageState implements ContractState {
         return ImmutableList.of(origin, target);
     }
 }
-// **/
-
- /** SOLUTION
-@BelongsToContract(MessageContract.class)
-public class MessageState implements ContractState {
-    public final Party origin;
-    public final Party target;
-    public final String content;
-    public MessageState(Party origin, Party target, String content) {
-        this.origin = origin;
-        this.target = target;
-        this.content = content;
-    }
-    @Override
-    public List<AbstractParty> getParticipants() {
-        return ImmutableList.of(origin, target);
-    }
-}
- **/
