@@ -11,29 +11,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-
 /** TODO(#1):
  Update this code so that the MessageState constructor takes an additional parameter 'content' of type String.
  This parameter should set a local parameter that is also named ‘content'.
  **/
 
-///**
-@BelongsToContract(MessageContract.class)
-public class MessageState implements ContractState {
-    public final Party origin;
-    public final Party target;
-    public MessageState(Party origin, Party target) {
-        this.origin = origin;
-        this.target = target;
-    }
-    @Override
-    public List<AbstractParty> getParticipants() {
-        return ImmutableList.of(origin, target);
-    }
-}
-// **/
-
- /** SOLUTION
+// SOLUTION
 @BelongsToContract(MessageContract.class)
 public class MessageState implements ContractState {
     public final Party origin;
@@ -49,4 +32,3 @@ public class MessageState implements ContractState {
         return ImmutableList.of(origin, target);
     }
 }
- **/
