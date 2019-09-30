@@ -5,10 +5,6 @@ import net.corda.core.contracts.BelongsToContract;
 import net.corda.core.contracts.ContractState;
 import net.corda.core.identity.AbstractParty;
 import net.corda.core.identity.Party;
-import net.corda.core.serialization.ConstructorForDeserialization;
-import net.corda.core.serialization.CordaSerializable;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 
 

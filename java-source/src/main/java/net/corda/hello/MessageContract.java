@@ -2,7 +2,6 @@ package net.corda.hello;
 
 import net.corda.core.contracts.*;
 import net.corda.core.transactions.LedgerTransaction;
-
 import java.util.Collections;
 import static net.corda.core.contracts.ContractsDSL.requireSingleCommand;
 import static net.corda.core.contracts.ContractsDSL.requireThat;
