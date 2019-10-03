@@ -22,7 +22,14 @@ lib/dokka.jar
 *.iml
 
 ## Directory-based project format:
-.idea
+#.idea
+
+.idea/compiler.xml
+.idea/misc.xml
+.idea/vcs.xml
+.idea/gradle.xml
+.idea/modules
+.idea/workspace.xml
 
 # if you remove the above rule, at least ignore the following:
 
